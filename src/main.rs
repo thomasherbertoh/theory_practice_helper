@@ -88,7 +88,8 @@ fn main() {
                         new_tot - average_score
                     );
                 }
-                print!("\n\n");
+                println!("Press any key to close\n\n");
+                term.read_char().unwrap();
                 break;
             }
             _ => println!("I didn't expect that! Please try again :)\n\n"),
