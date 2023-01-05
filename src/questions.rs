@@ -22,6 +22,10 @@ impl Question {
         self.text.clone()
     }
 
+    pub fn get_priority(&self) -> usize {
+        self.priority
+    }
+
     pub fn good_answer(&mut self) {
         if self.priority == 1 {
             return;
