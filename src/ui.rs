@@ -21,14 +21,6 @@ impl eframe::App for QuestionList {
         .into();
         ctx.set_style(style);
         ctx.set_visuals(egui::Visuals::dark());
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                if ui.button("Quit").clicked() {
-                    self.save_to_json().unwrap();
-                    frame.close();
-                }
-            })
-        });
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Study helper");
