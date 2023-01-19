@@ -50,15 +50,13 @@ impl Question {
 pub struct QuestionList {
     pub questions: Vec<Question>,
     tot: usize, // sum of priorities/effective total of questions
+    pub new_question: String,
+    pub current_question: Option<Question>,
 }
 
 impl QuestionList {
     pub fn default() -> Self {
         QuestionList::load_from_json()
-    }
-
-    pub fn get_tot(&self) -> usize {
-        self.tot
     }
 
     fn sort_questions(&mut self) {
@@ -74,6 +72,8 @@ impl QuestionList {
                 let mut ql: QuestionList = serde_json::from_reader(reader).unwrap_or(Self {
                     questions: Vec::new(),
                     tot: 0,
+                    new_question: String::new(),
+                    current_question: None,
                 });
                 ql.sort_questions();
                 ql.tot = 0;
@@ -87,6 +87,8 @@ impl QuestionList {
                 Self {
                     questions: Vec::new(),
                     tot: 0,
+                    new_question: String::new(),
+                    current_question: None,
                 }
             }
         }
@@ -135,5 +137,15 @@ impl QuestionList {
             self.add_question(Question::new(line.to_string()));
         }
         self.sort_questions();
+    }
+
+    pub fn calc_tot(&mut self) -> usize {
+        let mut tot = 0;
+        self.questions.iter().for_each(|q| tot += q.get_priority());
+        if self.current_question.is_some() {
+            tot += self.current_question.as_ref().unwrap().get_priority();
+        }
+        self.tot = tot;
+        tot
     }
 }
