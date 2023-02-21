@@ -9,5 +9,5 @@ fn main() {
 
     let native_options = eframe::NativeOptions::default();
 
-    eframe::run_native("Todo List", native_options, Box::new(|_| Box::new(app)));
+    eframe::run_native("Study Helper", native_options, Box::new(|_| Box::new(app)));
 }

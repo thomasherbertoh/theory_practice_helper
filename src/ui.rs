@@ -25,6 +25,7 @@ impl eframe::App for QuestionList {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Study helper");
 
+            // no questions - need to fetch them
             if self.questions.is_empty() {
                 ui.heading("！ I don't have any questions to ask you ！");
                 ui.label("Please give me a .txt file containing some :)");
@@ -33,6 +34,7 @@ impl eframe::App for QuestionList {
                     env::current_dir().unwrap()
                 ));
                 ui.text_edit_singleline(&mut self.new_question);
+
                 if ui.button("Submit file name").clicked() {
                     self.read_questions_from_txt(self.new_question.clone());
                 }
@@ -40,44 +42,47 @@ impl eframe::App for QuestionList {
                 if self.current_question.is_none() {
                     self.current_question = Some(self.extract_random());
                 }
+
+                // display question
                 ui.label(format!(
                     "{}",
                     self.current_question.clone().unwrap().get_text()
                 ));
-                if ui.button(format!("✅ Answered well")).clicked() {
+
+                // TODO: use egui::ImageButton instead of emojis for coloured buttons
+
+                if ui.button("✅ Answered well").clicked() {
                     self.current_question.as_mut().unwrap().good_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
                 };
+
                 if ui.button("⊟ Answered so-so").clicked() {
                     self.current_question.as_mut().unwrap().so_so_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
                 };
+
                 if ui.button("❌ Answered badly").clicked() {
                     self.current_question.as_mut().unwrap().bad_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
                 };
+
                 let current_score = self.calc_tot();
                 let expected_average = (self.questions.len() + 1) * 8; // + 1 because current question has been temporarily removed
                 if current_score == expected_average {
                     ui.label("Your score is on par!");
                 } else {
                     ui.label(format!(
-                        "Your current score is {} than the expected average by {} points",
+                        "Your current score is {} than the expected average",
                         if current_score < expected_average {
-                            "lower"
+                            format!("{} points better", expected_average - current_score)
                         } else {
-                            "higher"
-                        },
-                        if current_score < expected_average {
-                            expected_average - current_score
-                        } else {
-                            current_score - expected_average
+                            format!("{} points worse", current_score - expected_average)
                         }
                     ));
                 }
