@@ -44,10 +44,7 @@ impl eframe::App for QuestionList {
                 }
 
                 // display question
-                ui.label(format!(
-                    "{}",
-                    self.current_question.clone().unwrap().get_text()
-                ));
+                ui.label(self.current_question.as_ref().unwrap().get_text());
 
                 // TODO: use egui::ImageButton instead of emojis for coloured buttons
 
