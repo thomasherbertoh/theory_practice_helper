@@ -26,7 +26,7 @@ impl eframe::App for QuestionList {
             ui.heading("Study helper");
 
             // no questions - need to fetch them
-            if self.questions.is_empty() {
+            if self.questions.is_empty() && self.current_question.is_none() {
                 ui.heading("！ I don't have any questions to ask you ！");
                 ui.label("Please give me a .txt file containing some :)");
                 ui.label(format!(
@@ -98,6 +98,11 @@ impl eframe::App for QuestionList {
                             format!("{} points worse", current_score - expected_average)
                         }
                     ));
+                }
+                if ui.button("Remove this question").clicked() {
+                    self.remove_question(&self.current_question.clone().unwrap());
+                    self.current_question = None;
+                    self.calc_tot();
                 }
             }
             egui::warn_if_debug_build(ui);

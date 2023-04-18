@@ -107,6 +107,12 @@ impl QuestionList {
         self.save_to_json().unwrap();
     }
 
+    pub fn remove_question(&mut self, q: &Question) {
+        self.questions.retain(|question| q.text != question.text);
+        self.sort_questions();
+        self.save_to_json().unwrap();
+    }
+
     pub fn extract_random(&mut self) -> Question {
         let mut num = rand::thread_rng().gen_range(0..self.tot);
         for (i, q) in self.questions.iter().enumerate() {
