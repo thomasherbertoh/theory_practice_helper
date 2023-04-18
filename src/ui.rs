@@ -15,7 +15,7 @@ impl eframe::App for QuestionList {
             (Heading, FontId::new(30.0, Proportional)),
             (Body, FontId::new(20.0, Proportional)),
             (Monospace, FontId::new(14.0, Proportional)),
-            (Button, FontId::new(18.0, Proportional)),
+            (Button, FontId::new(24.0, Proportional)),
             (Small, FontId::new(10.0, Proportional)),
         ]
         .into();
@@ -46,23 +46,39 @@ impl eframe::App for QuestionList {
                 // display question
                 ui.label(self.current_question.as_ref().unwrap().get_text());
 
-                // TODO: use egui::ImageButton instead of emojis for coloured buttons
-
-                if ui.button("✅ Answered well").clicked() {
+                if ui
+                    .button(
+                        egui::RichText::new("✅ Answered well")
+                            .color(egui::Color32::from_rgb(0, 255, 0)),
+                    )
+                    .clicked()
+                {
                     self.current_question.as_mut().unwrap().good_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
                 };
 
-                if ui.button("⊟ Answered so-so").clicked() {
+                if ui
+                    .button(
+                        egui::RichText::new("⊟ Answered so-so")
+                            .color(egui::Color32::from_rgb(255, 255, 0)),
+                    )
+                    .clicked()
+                {
                     self.current_question.as_mut().unwrap().so_so_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
                 };
 
-                if ui.button("❌ Answered badly").clicked() {
+                if ui
+                    .button(
+                        egui::RichText::new("❌ Answered badly")
+                            .color(egui::Color32::from_rgb(255, 0, 0)),
+                    )
+                    .clicked()
+                {
                     self.current_question.as_mut().unwrap().bad_answer();
                     self.add_question(self.current_question.clone().unwrap());
                     self.current_question = None;
