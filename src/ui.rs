@@ -6,7 +6,7 @@ use egui::{
     TextStyle::{Body, Button, Heading, Monospace, Small},
 };
 
-use crate::questions::QuestionList;
+use crate::questions::{Question, QuestionList};
 
 impl eframe::App for QuestionList {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
@@ -103,6 +103,22 @@ impl eframe::App for QuestionList {
                     self.remove_question(&self.current_question.clone().unwrap());
                     self.current_question = None;
                     self.calc_tot();
+                }
+
+                ui.label("Add a question:");
+                ui.text_edit_singleline(&mut self.new_question);
+                if ui.button("Submit new question").clicked() {
+                    self.add_question(Question::new(self.new_question.clone()));
+                }
+
+                ui.label(format!(
+                    "Note that my current directory is {:?}",
+                    env::current_dir().unwrap()
+                ));
+                ui.label("Add questions from file");
+                ui.text_edit_singleline(&mut self.new_question);
+                if ui.button("Submit file name").clicked() {
+                    self.read_questions_from_txt(self.new_question.clone());
                 }
             }
             egui::warn_if_debug_build(ui);
